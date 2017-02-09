@@ -36,6 +36,11 @@ android {
         versionCode 1
         versionName "1.0.0"
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
     buildTypes {
         debug {
             minifyEnabled true
@@ -48,8 +53,13 @@ android {
     }
 }
 
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:25.1.0'
-//    testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
 }
