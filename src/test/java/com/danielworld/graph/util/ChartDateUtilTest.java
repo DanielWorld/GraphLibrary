@@ -1,6 +1,5 @@
 package com.danielworld.graph.util;
 
-import android.util.Pair;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +15,7 @@ public class ChartDateUtilTest {
     @Test
     public void testDayOfWeek() {
 
-		assertEquals(ChartDays.Thursday, ChartDateUtil.getDayOfWeek());
+//		assertEquals(ChartDays.Saturday, ChartDateUtil.getDayOfWeek());
 
 		long date = ChartDateUtil.getMillisFromDate(2017, 2, 1);
 		assertEquals(ChartDays.Wednesday, ChartDateUtil.getDayOfWeek(date));
@@ -32,7 +31,7 @@ public class ChartDateUtilTest {
 	@Test
 	public void testWeekOfMonth() {
 
-		assertEquals(2, ChartDateUtil.getWeekOfMonth(System.currentTimeMillis()));
+//		assertEquals(2, ChartDateUtil.getWeekOfMonth(System.currentTimeMillis()));
 
 		long date = ChartDateUtil.getMillisFromDate(2017, 1, 31);
 		assertEquals(5, ChartDateUtil.getWeekOfMonth(date));
