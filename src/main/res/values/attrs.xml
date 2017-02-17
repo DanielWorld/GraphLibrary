@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="Chart">
+        <attr name="BackgroundColor" format="color"/>
+        <attr name="oval" format="boolean" />
+        <attr name="xCount" format="integer" />
+    </declare-styleable>
+</resources>
