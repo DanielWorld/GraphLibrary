@@ -10,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.danielworld.graph.ChartData;
 import com.danielworld.graph.R;
 import com.danielworld.graph.model.BarData;
 import com.danielworld.graph.model.BarDataSet;
+import com.danielworld.graph.util.ChartDateUtil;
 
 import java.util.List;
 
@@ -58,6 +60,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
     // X축 라벨
     Paint mTextPaint = new Paint();
+    Paint mTextBackgroundPaint = new Paint();
 
     public Chart(Context context) {
         this(context, null);
@@ -174,6 +177,9 @@ public abstract class Chart extends ViewGroup implements ChartData {
         mTextPaint.setTextSize(mLabelTextSize);
         mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
+
+        mTextBackgroundPaint.setColor(Color.WHITE);
+        mTextBackgroundPaint.setStyle(Paint.Style.FILL);
     }
 
     // 평행 점선 그리기
@@ -258,14 +264,53 @@ public abstract class Chart extends ViewGroup implements ChartData {
         }
     }
 
+    Rect textBounds = new Rect();
     // x축 라벨 그리기
     private void drawXAxisLabel(Canvas canvas, BarDataSet barDataSet) {
         for (int i = 0; i < barDataSet.getEntries().size(); i++) {
-            canvas.drawText(
-                    barDataSet.getEntries().get(i).getX(),
-                    mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
-                    mCanvasSize.height() - (mBottomPadding / 3),
-                    mTextPaint);
+            if (ChartDateUtil.getDate(System.currentTimeMillis(), "M/d")
+                    .equals(barDataSet.getEntries().get(i).getX())) {
+                String newTitle = "오늘";
+
+                mTextPaint.setColor(Color.BLACK);
+                mTextPaint.getTextBounds(newTitle, 0, newTitle.length(), textBounds);
+
+                Log.w(TAG, "text bounds width = " + textBounds.width());
+                Log.v(TAG, "text bounds height = " + textBounds.height());
+                Log.d(TAG, "================================================");
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    canvas.drawRoundRect(
+                            mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() - (textBounds.width() / 1.1f),
+                            mCanvasSize.height() - (mBottomPadding / 3) - (textBounds.height() / 0.7f),
+                            mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() + (textBounds.width() / 1.1f),
+                            mCanvasSize.height() - (mBottomPadding / 3) + (textBounds.height() / 1.5f),
+                            textBounds.height(), textBounds.height(),
+                            mTextBackgroundPaint);
+                } else {
+                    canvas.drawRect(
+                            mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() - (textBounds.width() / 1.1f),
+                            mCanvasSize.height() - (mBottomPadding / 3) - (textBounds.height() / 0.7f),
+                            mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() + (textBounds.width() / 1.1f),
+                            mCanvasSize.height() - (mBottomPadding / 3) + (textBounds.height() / 1.5f),
+                            mTextBackgroundPaint);
+                }
+
+                canvas.drawText(
+                        newTitle,
+                        mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
+                        mCanvasSize.height() - (mBottomPadding / 3),
+                        mTextPaint);
+
+            } else {
+                mTextPaint.setColor(Color.WHITE);
+
+                canvas.drawText(
+                        barDataSet.getEntries().get(i).getX(),
+                        mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
+                        mCanvasSize.height() - (mBottomPadding / 3),
+                        mTextPaint);
+            }
         }
     }
 
