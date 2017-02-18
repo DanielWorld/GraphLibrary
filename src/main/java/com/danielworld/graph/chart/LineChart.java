@@ -3,7 +3,7 @@ package com.danielworld.graph.chart;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import java.util.ArrayList;
+import com.danielworld.graph.model.BarData;
 
 /**
  * Copyright (C) 2014-2017 daniel@bapul.net
@@ -23,9 +23,11 @@ public class LineChart extends Chart {
         super(context, attrs, defStyleAttr);
     }
 
+
+
     @Override
-    public void setData(ArrayList<String> testData) {
-        xData = testData;
+    public void setData(BarData barData) {
+        this.mBarData = barData;
         invalidate();
     }
 }

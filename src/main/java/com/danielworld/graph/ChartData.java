@@ -1,6 +1,6 @@
 package com.danielworld.graph;
 
-import java.util.ArrayList;
+import com.danielworld.graph.model.BarData;
 
 /**
  * Copyright (C) 2014-2017 daniel@bapul.net
@@ -9,5 +9,5 @@ import java.util.ArrayList;
 
 public interface ChartData {
 
-    void setData(ArrayList<String> testData);
+    void setData(BarData barData);
 }

@@ -2,8 +2,13 @@
 <resources>
 
     <declare-styleable name="Chart">
-        <attr name="BackgroundColor" format="color"/>
-        <attr name="oval" format="boolean" />
-        <attr name="xCount" format="integer" />
+        <attr name="backgroundColor" format="color"/>
+        <attr name="circleRadius" format="dimension"/>
+        <attr name="entryLineWidth" format="dimension"/>
+        <attr name="graphPaddingRight" format="dimension"/>
+        <attr name="graphPaddingTop" format="dimension"/>
+        <attr name="graphPaddingLeft" format="dimension"/>
+        <attr name="graphPaddingBottom" format="dimension"/>
+        <attr name="graphPadding" format="dimension"/>
     </declare-styleable>
 </resources>
