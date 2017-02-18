@@ -38,6 +38,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
     private int mLeftPadding;
     private int mRightPadding;
     private int mBottomPadding;
+    private int mLabelTextSize;
 
     protected BarData mBarData;
 
@@ -55,7 +56,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
     // 원
     Paint mCirclePaint = new Paint();
 
-    Paint mXAxisTab = new Paint();
+    // X축 라벨
+    Paint mTextPaint = new Paint();
 
     public Chart(Context context) {
         this(context, null);
@@ -88,6 +90,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
             mRightPadding = typedArray.getDimensionPixelSize(R.styleable.Chart_graphPaddingRight, 0);
             mBottomPadding = typedArray.getDimensionPixelSize(R.styleable.Chart_graphPaddingBottom, 0);
         }
+
+        mLabelTextSize = typedArray.getDimensionPixelSize(R.styleable.Chart_labelTextSize, 10);
     }
 
     @Override
@@ -97,12 +101,16 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
         // 캔버스 크기 구하기
         canvas.getClipBounds(mCanvasSize);
+
         // 실제 그래프 사이즈 구하기
         calcGraphSize();
+
         // 평행 점선 Paint 설정
         initDottedLine();
+
         // Entry 사이 line Paint 설정
         initEntryLine();
+
         // Entry 원형 설정
         initEntryCircle();
 
@@ -125,6 +133,9 @@ public abstract class Chart extends ViewGroup implements ChartData {
                 // 2-1. 큰 원형 그리기
                 // 2-2. 작은 원형 그리기
                 drawCircleEntries(canvas, barDataSet);
+
+                // 3. x축 라벨 그리기
+                drawXAxisLabel(canvas, barDataSet);
             }
         }
     }
@@ -159,10 +170,10 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
     // x 값 라벨 설정
     private void initXLabel() {
-        mXAxisTab.setColor(Color.WHITE);
-        mXAxisTab.setTextSize(50.0f);
-        mXAxisTab.setTypeface(Typeface.DEFAULT_BOLD);
-        mXAxisTab.setTextAlign(Paint.Align.CENTER);
+        mTextPaint.setColor(Color.WHITE);
+        mTextPaint.setTextSize(mLabelTextSize);
+        mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
     // 평행 점선 그리기
@@ -237,13 +248,24 @@ public abstract class Chart extends ViewGroup implements ChartData {
             );
 
             // 2. 작은 원형 그리기
-            mCirclePaint.setColor(Color.parseColor("#ffffff"));
+            mCirclePaint.setColor(Color.WHITE);
             canvas.drawCircle(
                     mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
                     mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
                     mCircleRadius / 2,
                     mCirclePaint
             );
+        }
+    }
+
+    // x축 라벨 그리기
+    private void drawXAxisLabel(Canvas canvas, BarDataSet barDataSet) {
+        for (int i = 0; i < barDataSet.getEntries().size(); i++) {
+            canvas.drawText(
+                    barDataSet.getEntries().get(i).getX(),
+                    mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
+                    mCanvasSize.height() - (mBottomPadding / 3),
+                    mTextPaint);
         }
     }
 

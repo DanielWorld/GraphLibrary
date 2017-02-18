@@ -10,5 +10,6 @@
         <attr name="graphPaddingLeft" format="dimension"/>
         <attr name="graphPaddingBottom" format="dimension"/>
         <attr name="graphPadding" format="dimension"/>
+        <attr name="labelTextSize" format="dimension"/>
     </declare-styleable>
 </resources>

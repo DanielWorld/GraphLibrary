@@ -21,11 +21,11 @@ public class BarDataSet {
     @ColorInt
     private int mBarColor;
 
-    public BarDataSet(ArrayList<BarEntry> entries) {
-        this.mEntries = entries;
-        this.calcYSize(entries);
-        this.mBarColor = Color.parseColor("#119203");
-    }
+//    public BarDataSet(ArrayList<BarEntry> entries) {
+//        this.mEntries = entries;
+//        this.calcYSize(entries);
+//        this.mBarColor = Color.parseColor("#119203");
+//    }
 
     public BarDataSet(ArrayList<BarEntry> entries, @ColorInt int barColor) {
         this.mEntries = entries;
