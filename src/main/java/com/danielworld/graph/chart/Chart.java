@@ -12,7 +12,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
@@ -356,23 +355,29 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
         for (int i = 0; i < barDataSet.getEntries().size(); i++) {
 
-            // 1. 큰 원형 먼저 그리기
-            mCirclePaint.setColor(barDataSet.getBarColor());
-            canvas.drawCircle(
-                    mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
-                    mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
-                    mCircleRadius,
-                    mCirclePaint
-            );
+            if (mHighLightXRange != null &&
+                    barDataSet.getEntries().get(i).getEntryXRange() != null &&
+                    barDataSet.getEntries().get(i).getEntryXRange().contains(mHighLightXRange.getTo())) {
+                    // Daniel (2017-02-20 16:46:06): if this entry is selected, then do nothing!
+            } else {
+                // 1. 큰 원형 먼저 그리기
+                mCirclePaint.setColor(barDataSet.getBarColor());
+                canvas.drawCircle(
+                        mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
+                        mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
+                        mCircleRadius,
+                        mCirclePaint
+                );
 
-            // 2. 작은 원형 그리기
-            mCirclePaint.setColor(Color.WHITE);
-            canvas.drawCircle(
-                    mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
-                    mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
-                    mCircleRadius / 2,
-                    mCirclePaint
-            );
+                // 2. 작은 원형 그리기
+                mCirclePaint.setColor(Color.WHITE);
+                canvas.drawCircle(
+                        mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
+                        mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
+                        mCircleRadius / 2,
+                        mCirclePaint
+                );
+            }
         }
     }
 
@@ -429,41 +434,94 @@ public abstract class Chart extends ViewGroup implements ChartData {
     Rect highLightTextBounds = new Rect();
     // HighLight Entry 그리기
     private void drawHighLightEntries(Canvas canvas, List<BarDataSet> barDataSetList) {
-        for (BarDataSet barDataSet : barDataSetList) {
-            for (int i = 0; i < barDataSet.getEntries().size(); i++) {
+        // Daniel (2017-02-20 15:58:51): This is useful logic! Don't remove it!
+//        for (BarDataSet barDataSet : barDataSetList) {
+//            for (int i = 0; i < barDataSet.getEntries().size(); i++) {
+//
+//                if (mHighLightXRange != null &&
+//                        barDataSet.getEntries().get(i).getEntryXRange() != null &&
+//                        barDataSet.getEntries().get(i).getEntryXRange().contains(mHighLightXRange.getTo())) {
+//                    // 1. 큰 원형 먼저 그리기
+//                    mCirclePaint.setColor(Color.WHITE);
+//                    canvas.drawCircle(
+//                            mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
+//                            mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
+//                            mCircleRadius,
+//                            mCirclePaint
+//                    );
+//
+//                    // 2. HighLight text 그리기
+//                    String valueY = String.valueOf((int) barDataSet.getEntries().get(i).getY());
+//                    mHighLightTextPaint.setColor(barDataSet.getBarColor());
+//                    mHighLightTextPaint.getTextBounds(valueY, 0, valueY.length(), highLightTextBounds);
+//
+//                    canvas.drawText(
+//                            valueY,
+//                            mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
+//                            mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate() + highLightTextBounds.height() / 2,
+//                            mHighLightTextPaint
+//                    );
+//                }
+//            }
+//        }
+
+        for (int barDataSetIndex = 0; barDataSetIndex < barDataSetList.size(); barDataSetIndex++) {
+            for (int i = 0; i < barDataSetList.get(barDataSetIndex).getEntries().size(); i++) {
 
                 if (mHighLightXRange != null &&
-                        barDataSet.getEntries().get(i).getEntryXRange() != null &&
-                        barDataSet.getEntries().get(i).getEntryXRange().contains(mHighLightXRange.getTo())) {
+                        barDataSetList.get(barDataSetIndex).getEntries().get(i).getEntryXRange() != null &&
+                        barDataSetList.get(barDataSetIndex).getEntries().get(i).getEntryXRange().contains(mHighLightXRange.getTo())) {
+
+                    // Daniel (2017-02-20 16:00:22):
+                    // TODO: 현재는 무조건 BarDataSet 이 2개라는 가정하에 진행...
+                    // TODO: 만약 그 이상일 경우 답없음
+                    if (barDataSetList.size() == 2) {
+                        BarEntry firstEntry = barDataSetList.get(0).getEntries().get(i);
+                        BarEntry secondEntry = barDataSetList.get(1).getEntries().get(i);
+
+                        float differenceGap = Math.abs(firstEntry.getEntryYCoordinate() - secondEntry.getEntryYCoordinate());
+
+                        // 2개의 Entry 값이 동일하지는 않지만 반지름 이하의 좌표 차이 밖에 안남
+                        if (differenceGap <= mCircleRadius * 1.5f && differenceGap != 0) {
+                            // 1번째 Entry 가 2번째 Entry 보다 밑에 있을 경우
+                            if (firstEntry.getEntryYCoordinate() > secondEntry.getEntryYCoordinate()) {
+                                // 1번째 Entry 를 밑으로 내림
+                                firstEntry.setEntryYCoordinate(firstEntry.getEntryYCoordinate() + mCircleRadius);
+                                // 2번째 Entry 를 위로 올림
+                                secondEntry.setEntryYCoordinate(secondEntry.getEntryYCoordinate() - mCircleRadius);
+                            } else {
+                                // 2번째 Entry 를 밑으로 내림
+                                secondEntry.setEntryYCoordinate(secondEntry.getEntryYCoordinate() + mCircleRadius);
+                                // 1번째 Entry 를 위로 올림
+                                firstEntry.setEntryYCoordinate(firstEntry.getEntryYCoordinate() - mCircleRadius);
+                            }
+
+                        }
+                    }
+
                     // 1. 큰 원형 먼저 그리기
                     mCirclePaint.setColor(Color.WHITE);
                     canvas.drawCircle(
-                            mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
-                            mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
+                            mGraphSize.left + barDataSetList.get(barDataSetIndex).getEntries().get(i).getEntryCenterX(),
+                            mGraphSize.bottom - barDataSetList.get(barDataSetIndex).getEntries().get(i).getEntryYCoordinate(),
                             mCircleRadius,
                             mCirclePaint
                     );
 
-                    // 2. HighLight drawable 그리기
-//                    mHighLightDrawable.setBounds(
-//                            (int) (mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() + mCircleRadius),
-//                            (int) (mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate() - mCircleRadius),
-//                            (int) (mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() + mCircleRadius) + 100,
-//                            (int) (mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate() - mCircleRadius) + mCircleRadius * 2
-//                    );
-//                    mHighLightDrawable.draw(canvas);
-
-                    // 3. HighLight text 그리기
-                    String valueY = String.valueOf((int) barDataSet.getEntries().get(i).getY());
-                    mHighLightTextPaint.setColor(barDataSet.getBarColor());
+                    // 2. HighLight text 그리기
+                    String valueY = String.valueOf((int) barDataSetList.get(barDataSetIndex).getEntries().get(i).getY());
+                    mHighLightTextPaint.setColor(barDataSetList.get(barDataSetIndex).getBarColor());
                     mHighLightTextPaint.getTextBounds(valueY, 0, valueY.length(), highLightTextBounds);
 
                     canvas.drawText(
                             valueY,
-                            mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
-                            mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate() + highLightTextBounds.height() / 2,
+                            mGraphSize.left + barDataSetList.get(barDataSetIndex).getEntries().get(i).getEntryCenterX(),
+                            mGraphSize.bottom - barDataSetList.get(barDataSetIndex).getEntries().get(i).getEntryYCoordinate() + highLightTextBounds.height() / 2,
                             mHighLightTextPaint
                     );
+
+                    // Daniel (2017-02-20 16:02:11): 현재 로직에서 HighLight 는 무조건 1번이므로 break 처리한다.
+                    break;
                 }
             }
         }
