@@ -52,6 +52,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
     private int mBottomPadding;
     private int mLabelTextSize;
     private int mHighLightTextSize;
+    private int mHighLightBackgroundRadius;
 
     protected BarData mBarData;
 
@@ -126,6 +127,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
         mLabelTextSize = typedArray.getDimensionPixelSize(R.styleable.Chart_labelTextSize, 10);
         mHighLightTextSize = typedArray.getDimensionPixelSize(R.styleable.Chart_highLightTextSize, 9);
+        mHighLightBackgroundRadius = typedArray.getDimensionPixelOffset(R.styleable.Chart_highLightBackgroundRadius, 6);
 
         setOnTouchListener(mTouchListener);
     }
@@ -173,6 +175,9 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
         if (mBarData != null) {
             mBarData.setContainerSize(mGraphSize.width(), mGraphSize.height());
+
+            // 0. HighLight 존재할 경우 배경 부분 그려줘야 함
+            drawHighLightBackground(canvas);
 
             // 1. 해당 Max y값과 Min y(== 0) 을 기준으로 가로로 점선 긋기 (먼저 완료 필수)
             drawDottedLines(canvas, (int) mBarData.getMaxY());
@@ -239,9 +244,34 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
     // HighLight 설정
     private void initHighLight() {
+        mHighLightBackgroundPaint.setColor(Color.parseColor("#1Affffff"));
+        mHighLightBackgroundPaint.setStyle(Paint.Style.FILL);
+
         mHighLightTextPaint.setTextSize(mHighLightTextSize);
         mHighLightTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
         mHighLightTextPaint.setTextAlign(Paint.Align.CENTER);
+    }
+
+    // HighLight 부분 배경 그리기
+    private void drawHighLightBackground(Canvas canvas) {
+        if (mHighLightXRange == null) return;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            canvas.drawRoundRect(
+                    mGraphSize.left + mHighLightXRange.getFrom(),
+                    0,
+                    mGraphSize.left + mHighLightXRange.getTo(),
+                    mCanvasSize.height(),
+                    mHighLightBackgroundRadius, mHighLightBackgroundRadius,
+                    mHighLightBackgroundPaint);
+        } else {
+            canvas.drawRect(
+                    mGraphSize.left + mHighLightXRange.getFrom(),
+                    0,
+                    mGraphSize.left + mHighLightXRange.getTo(),
+                    mCanvasSize.height(),
+                    mHighLightBackgroundPaint);
+        }
     }
 
     // 평행 점선 그리기
@@ -446,6 +476,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
     // Daniel (2017-02-20 11:58:44): 현재 HighLight 된 x 좌표 Range
     protected Range mHighLightXRange;
+    // HighLight 배경
+    Paint mHighLightBackgroundPaint = new Paint();
     // HighLight 텍스트
     Paint mHighLightTextPaint = new Paint();
 
