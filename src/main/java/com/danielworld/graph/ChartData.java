@@ -3,6 +3,7 @@ package com.danielworld.graph;
 import android.support.annotation.ColorInt;
 
 import com.danielworld.graph.model.BarData;
+import com.danielworld.graph.model.ValueFormatter;
 
 /**
  * Copyright (C) 2014-2017 daniel@bapul.net
@@ -12,6 +13,10 @@ import com.danielworld.graph.model.BarData;
 public interface ChartData {
 
     void setData(BarData barData);
+
+    void setTodayLabel(String today);
+
+    void setXValueFormatter(ValueFormatter vf);
 
     void setBackgroundGradient(@ColorInt int startColor, @ColorInt int endColor);
 

@@ -12,7 +12,7 @@ public class BarEntry extends Entry {
     private Range entryXRange;
     private float entryYCoordinate;    // 그래프 상의 실제 y 좌표값 (TODO: y값이 아님!!)
 
-    public BarEntry(String x, float y) {
+    public BarEntry(int x, float y) {
         super(x, y);
     }
 

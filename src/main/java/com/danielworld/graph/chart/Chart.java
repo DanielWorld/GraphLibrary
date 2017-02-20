@@ -26,6 +26,7 @@ import com.danielworld.graph.model.BarData;
 import com.danielworld.graph.model.BarDataSet;
 import com.danielworld.graph.model.BarEntry;
 import com.danielworld.graph.model.Range;
+import com.danielworld.graph.model.ValueFormatter;
 import com.danielworld.graph.util.ChartDateUtil;
 
 import java.util.List;
@@ -54,6 +55,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
     private int mHighLightBackgroundRadius;
 
     protected BarData mBarData;
+
+    protected String todayTitle = "Today";
 
     Rect mCanvasSize = new Rect();          // 실제 Canvas 사이즈
     RectF mGraphSize = new RectF();         // Canvas 에서 padding 을 더해서 나온 Graph 사이즈
@@ -386,11 +389,10 @@ public abstract class Chart extends ViewGroup implements ChartData {
     private void drawXAxisLabel(Canvas canvas, BarDataSet barDataSet) {
         for (int i = 0; i < barDataSet.getEntries().size(); i++) {
             if (ChartDateUtil.getDate(System.currentTimeMillis(), "M/d")
-                    .equals(barDataSet.getEntries().get(i).getX())) {
-                String newTitle = "오늘";
+                    .equals(mValueFormatter.getValueFormatter(barDataSet.getEntries().get(i).getX()))) {
 
                 mTextPaint.setColor(Color.BLACK);
-                mTextPaint.getTextBounds(newTitle, 0, newTitle.length(), textBounds);
+                mTextPaint.getTextBounds(todayTitle, 0, todayTitle.length(), textBounds);
 
 //                Log.w(TAG, "text bounds width = " + textBounds.width());
 //                Log.v(TAG, "text bounds height = " + textBounds.height());
@@ -414,7 +416,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
                 }
 
                 canvas.drawText(
-                        newTitle,
+                        todayTitle,
                         mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
                         mCanvasSize.height() - (mBottomPadding / 3),
                         mTextPaint);
@@ -423,7 +425,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
                 mTextPaint.setColor(Color.WHITE);
 
                 canvas.drawText(
-                        barDataSet.getEntries().get(i).getX(),
+                        mValueFormatter.getValueFormatter(barDataSet.getEntries().get(i).getX()),
                         mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
                         mCanvasSize.height() - (mBottomPadding / 3),
                         mTextPaint);
@@ -574,6 +576,13 @@ public abstract class Chart extends ViewGroup implements ChartData {
                     break;
             }
             return false;
+        }
+    };
+
+    protected ValueFormatter mValueFormatter = new ValueFormatter() {
+        @Override
+        public String getValueFormatter(int x) {
+            return ChartDateUtil.getDate(ChartDateUtil.getTimeFromDanielDayIndex(x), "M/d");
         }
     };
 }

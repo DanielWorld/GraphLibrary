@@ -248,6 +248,40 @@ public class ChartDateUtil {
 		return new long[]{targetResult, addDays(targetResult, 6)};
 	}
 
+	public static int getDanielMonthIndex(long milliseconds) {
+		short standardYear = 1700;
+		int targetYear = getYear(milliseconds);
+		int targetMonth = getMonthOfYear(milliseconds);
+		return (targetYear - standardYear) * 12 + targetMonth - 1;
+	}
+
+	public static long getTimeFromDanielMonthIndex(int monthIndex) {
+		short standardYear = 1700;
+		int getYear = monthIndex / 12;
+		int getMonth = monthIndex % 12;
+		return getMillisFromDate(standardYear + getYear, getMonth + 1);
+	}
+
+	/** @deprecated */
+	@Deprecated
+	public static long getMillisFromDate(int year, int month) {
+		GregorianCalendar calendar = new GregorianCalendar(TimeZone.getDefault());
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH, month - 1);
+		return calendar.getTimeInMillis();
+	}
+
+	public static int getDanielDayIndex(long milliseconds) {
+		int year = getYear(milliseconds);
+		int month = getMonthOfYear(milliseconds);
+		int day = getDayOfMonth(milliseconds);
+		return (int)(getMillisFromDate(year, month, day, 23, 59, 59) / 86400000L);
+	}
+
+	public static long getTimeFromDanielDayIndex(int dayIndex) {
+		return (long)dayIndex * 86400000L;
+	}
+
 //	/**
 //	 * Return an ISO 8601 combined date and time string for current date/time
 //	 * @param time long time (milliseconds)

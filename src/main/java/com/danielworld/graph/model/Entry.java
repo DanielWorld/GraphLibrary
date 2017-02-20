@@ -13,35 +13,35 @@ import android.os.Parcelable;
  */
 
 public class Entry extends BaseEntry implements Parcelable{
-    private String x = "";
+    private int x;
 
     public Entry() {
 
     }
 
-    public Entry(String x, float y) {
+    public Entry(int x, float y) {
         super(y);
         this.x = x;
     }
 
-    public Entry(String x, float y, Object data) {
+    public Entry(int x, float y, Object data) {
         super(y, data);
         this.x = x;
     }
 
     protected Entry(Parcel in) {
-        this.x = in.readString();
+        this.x = in.readInt();
         this.setY(in.readFloat());
         if(in.readInt() == 1) {
             this.setData(in.readParcelable(Object.class.getClassLoader()));
         }
     }
 
-    public String getX() {
+    public int getX() {
         return x;
     }
 
-    public void setX(String x) {
+    public void setX(int x) {
         this.x = x;
     }
 
@@ -50,7 +50,7 @@ public class Entry extends BaseEntry implements Parcelable{
     }
 
     public boolean equalTo(Entry e) {
-        return (e != null) && (e.getData() == this.getData()) && (e.getX().equals(this.getX())) && (e.getY() == this.getY());
+        return (e != null) && (e.getData() == this.getData()) && (e.getX() == (this.getX())) && (e.getY() == this.getY());
     }
 
     @Override
@@ -65,7 +65,7 @@ public class Entry extends BaseEntry implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(x);
+        dest.writeInt(x);
         dest.writeFloat(this.getY());
         if(this.getData() != null) {
             if(!(this.getData() instanceof Parcelable)) {

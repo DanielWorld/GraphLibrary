@@ -1,7 +1,5 @@
 package com.danielworld.graph.model;
 
-import android.util.Log;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,9 +12,11 @@ public class BarData {
 
     protected List<BarDataSet> mBarDataList;
 
-//    private double mMinY = Double.MAX_VALUE;
     private float mMinY = 0;   // 0 은 무조건 보여줘야 함..
     private float mMaxY = Float.MIN_VALUE;
+
+    private int mMinX = Integer.MAX_VALUE;
+    private int mMaxX = Integer.MIN_VALUE;
 
     private int mMaxEntrySize = 0;  // BarDataSet 중 가장 많은 entry 수
     private int mXGap = 0;      // 하나의 Entry x 값 공간 크기
@@ -28,6 +28,10 @@ public class BarData {
         for (BarDataSet barDataSet : mBarDataList) {
             mMinY = Math.min(mMinY, barDataSet.getMinY());
             mMaxY = Math.max(mMaxY, barDataSet.getMaxY());
+
+            mMinX = Math.min(mMinX, barDataSet.getMinX());
+            mMaxX = Math.max(mMaxX, barDataSet.getMaxX());
+
             mMaxEntrySize = Math.max(mMaxEntrySize, barDataSet.getEntrySize());
         }
     }
@@ -46,6 +50,14 @@ public class BarData {
 
     public float getMaxY() {
         return mMaxY;
+    }
+
+    public int getMinX() {
+        return mMinX;
+    }
+
+    public int getMaxX() {
+        return mMaxX;
     }
 
     public int getMaxEntrySize() {

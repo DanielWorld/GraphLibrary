@@ -5,6 +5,7 @@ import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 
 import com.danielworld.graph.model.BarData;
+import com.danielworld.graph.model.ValueFormatter;
 
 /**
  * Copyright (C) 2014-2017 daniel@bapul.net
@@ -24,13 +25,22 @@ public class LineChart extends Chart {
         super(context, attrs, defStyleAttr);
     }
 
-
-
     @Override
     public void setData(BarData barData) {
         this.mBarData = barData;
         this.mHighLightXRange = null;
         invalidate();
+    }
+
+    @Override
+    public void setTodayLabel(String today) {
+        this.todayTitle = today;
+    }
+
+    @Override
+    public void setXValueFormatter(ValueFormatter vf) {
+        if (vf != null)
+            mValueFormatter = vf;
     }
 
     @Override
