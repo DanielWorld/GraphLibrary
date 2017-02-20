@@ -3,6 +3,8 @@
 
     <declare-styleable name="Chart">
         <attr name="backgroundColor" format="color"/>
+        <attr name="backgroundGradientColorStart" format="color"/>
+        <attr name="backgroundGradientColorEnd" format="color"/>
         <attr name="circleRadius" format="dimension"/>
         <attr name="entryLineWidth" format="dimension"/>
         <attr name="graphPaddingRight" format="dimension"/>
@@ -11,5 +13,6 @@
         <attr name="graphPaddingBottom" format="dimension"/>
         <attr name="graphPadding" format="dimension"/>
         <attr name="labelTextSize" format="dimension"/>
+        <attr name="highLightTextSize" format="dimension" />
     </declare-styleable>
 </resources>
