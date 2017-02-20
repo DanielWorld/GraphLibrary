@@ -41,6 +41,20 @@ public class ChartDateUtil {
 	}
 
 	/**
+	 * Get current day of year
+	 * @return
+	 */
+	public static int getDayOfYear() {
+		return getDayOfYear(System.currentTimeMillis());
+	}
+
+	public static int getDayOfYear(long milliseconds) {
+		Calendar calendar = new GregorianCalendar(TimeZone.getDefault());
+		calendar.setTimeInMillis(milliseconds);
+		return calendar.get(Calendar.DAY_OF_YEAR);
+	}
+
+	/**
 	 * Get week of month <br>
 	 *     first week returns 1
 	 * @return
@@ -129,6 +143,19 @@ public class ChartDateUtil {
 		calendar.setTimeInMillis(milliseconds);
 		calendar.add(Calendar.DAY_OF_MONTH, days);
 		return calendar.getTimeInMillis();
+	}
+
+	/**
+	 * Get day count between {@code startTime} and {@code endTime}
+	 * @param startTime
+	 * @param endTime
+	 * @param includeTarget <b>true</b> : include day of {@code startTime} and {@code endTime}
+	 * @return
+	 */
+	public static int getDayCount(long startTime, long endTime, boolean includeTarget) {
+		// TODO: this is not perfect.. sorry.
+		// TODO: Daniel (2017-02-20 18:50:04): This only works when the difference days only in 365 days..
+		return Math.abs(getDayOfYear(startTime) - getDayOfYear(endTime)) + (includeTarget ? 1 : 0);
 	}
 
 	/**
