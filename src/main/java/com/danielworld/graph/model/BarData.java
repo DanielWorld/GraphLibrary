@@ -72,7 +72,11 @@ public class BarData {
                 if (mMaxY > 0) {
                     tempYGap = height / mMaxY;
                 }
-                barEntry.setEntryYCoordinate(tempYGap * barEntry.getY());
+
+                if (barEntry.getY() > 0)
+                    barEntry.setEntryYCoordinate(tempYGap * barEntry.getY());
+                else
+                    barEntry.setEntryYCoordinate(0);
 
                 barEntry.setEntryXRange(tempXGap, tempXGap + mXGap);
                 tempXGap += mXGap;
