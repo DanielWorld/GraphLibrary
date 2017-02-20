@@ -41,4 +41,9 @@ public class Range {
     public boolean isSmaller(float value) {
         return value < this.from;
     }
+
+    @Override
+    public String toString() {
+        return "From " + from + " to " + to;
+    }
 }

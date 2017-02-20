@@ -28,6 +28,7 @@ public class LineChart extends Chart {
     @Override
     public void setData(BarData barData) {
         this.mBarData = barData;
+        this.mHighLightXRange = null;
         invalidate();
     }
 }

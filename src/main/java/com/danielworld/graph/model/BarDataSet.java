@@ -49,6 +49,10 @@ public class BarDataSet {
         return mEntries;
     }
 
+    public boolean hasEntries() {
+        return mEntries != null && !mEntries.isEmpty();
+    }
+
     public float getMinY() {
         return mMinY;
     }

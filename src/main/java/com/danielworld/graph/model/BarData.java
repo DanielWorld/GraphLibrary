@@ -36,6 +36,10 @@ public class BarData {
         return mBarDataList;
     }
 
+    public boolean hasBarDataList() {
+        return mBarDataList != null && !mBarDataList.isEmpty();
+    }
+
     public float getMinY() {
         return mMinY;
     }

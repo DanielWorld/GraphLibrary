@@ -14,12 +14,16 @@ import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.danielworld.graph.ChartData;
 import com.danielworld.graph.R;
 import com.danielworld.graph.model.BarData;
 import com.danielworld.graph.model.BarDataSet;
+import com.danielworld.graph.model.BarEntry;
+import com.danielworld.graph.model.Range;
 import com.danielworld.graph.util.ChartDateUtil;
 
 import java.util.List;
@@ -73,6 +77,11 @@ public abstract class Chart extends ViewGroup implements ChartData {
     public Chart(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        // Daniel (2016-07-15 18:09:16): below 4.0.4 there is issue with clip mRectanglePath java.lang.UnsupportedOperationException
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
         setWillNotDraw(false);
 
         // Daniel (2017-02-17 18:00:20): Manage attributes
@@ -95,6 +104,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
         }
 
         mLabelTextSize = typedArray.getDimensionPixelSize(R.styleable.Chart_labelTextSize, 10);
+
+        setOnTouchListener(mTouchListener);
     }
 
     @Override
@@ -130,9 +141,13 @@ public abstract class Chart extends ViewGroup implements ChartData {
             drawDottedLines(canvas, (int) mBarData.getMaxY());
 
             // 2. 원형과 원형사이 선 그리기
-            drawLinesBetweenEntry(canvas, mBarData.getBarDataList());
+//            drawLinesBetweenEntry(canvas, mBarData.getBarDataList());
 
             for (BarDataSet barDataSet : mBarData.getBarDataList()) {
+
+                // 2. 원형과 원형사이 선 그리기
+                drawLinesBetweenEntry(canvas, barDataSet);
+
                 // 2-1. 큰 원형 그리기
                 // 2-2. 작은 원형 그리기
                 drawCircleEntries(canvas, barDataSet);
@@ -239,28 +254,61 @@ public abstract class Chart extends ViewGroup implements ChartData {
         }
     }
 
+    // Entry 사이에 라인 그리기
+    private void drawLinesBetweenEntry(Canvas canvas, BarDataSet barDataSet) {
+        mEntryLine.setColor(barDataSet.getBarColor());
+
+        for (int i = 0; (i + 1) < barDataSet.getEntries().size(); i++) {
+            Log.v(TAG, "drawLine x, y = " + (mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX())
+                    + " | " + (mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate()));
+            Log.d(TAG, "=================================================================");
+            canvas.drawLine(
+                    mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
+                    mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
+                    mGraphSize.left + barDataSet.getEntries().get(i + 1).getEntryCenterX(),
+                    mGraphSize.bottom - barDataSet.getEntries().get(i + 1).getEntryYCoordinate(),
+                    mEntryLine
+            );
+        }
+    }
+
     // 원형 Entry 그리기
     private void drawCircleEntries(Canvas canvas, BarDataSet barDataSet) {
         mCirclePaint.setStyle(Paint.Style.FILL);
 
         for (int i = 0; i < barDataSet.getEntries().size(); i++) {
-            // 1, 큰 원형 먼저 그리기
-            mCirclePaint.setColor(barDataSet.getBarColor());
-            canvas.drawCircle(
-                    mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
-                    mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
-                    mCircleRadius,
-                    mCirclePaint
-            );
 
-            // 2. 작은 원형 그리기
-            mCirclePaint.setColor(Color.WHITE);
-            canvas.drawCircle(
-                    mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
-                    mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
-                    mCircleRadius / 2,
-                    mCirclePaint
-            );
+            if (mHighLightXRange != null &&
+                    barDataSet.getEntries().get(i).getEntryXRange() != null &&
+                    barDataSet.getEntries().get(i).getEntryXRange().contains(mHighLightXRange.getTo())) {
+                // 1. 큰 원형 먼저 그리기
+                mCirclePaint.setColor(Color.WHITE);
+                canvas.drawCircle(
+                        mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
+                        mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
+                        mCircleRadius,
+                        mCirclePaint
+                );
+
+            } else {
+                // 1. 큰 원형 먼저 그리기
+                mCirclePaint.setColor(barDataSet.getBarColor());
+                canvas.drawCircle(
+                        mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
+                        mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
+                        mCircleRadius,
+                        mCirclePaint
+                );
+
+                // 2. 작은 원형 그리기
+                mCirclePaint.setColor(Color.WHITE);
+                canvas.drawCircle(
+                        mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
+                        mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
+                        mCircleRadius / 2,
+                        mCirclePaint
+                );
+            }
         }
     }
 
@@ -275,9 +323,9 @@ public abstract class Chart extends ViewGroup implements ChartData {
                 mTextPaint.setColor(Color.BLACK);
                 mTextPaint.getTextBounds(newTitle, 0, newTitle.length(), textBounds);
 
-                Log.w(TAG, "text bounds width = " + textBounds.width());
-                Log.v(TAG, "text bounds height = " + textBounds.height());
-                Log.d(TAG, "================================================");
+//                Log.w(TAG, "text bounds width = " + textBounds.width());
+//                Log.v(TAG, "text bounds height = " + textBounds.height());
+//                Log.d(TAG, "================================================");
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     canvas.drawRoundRect(
@@ -318,4 +366,40 @@ public abstract class Chart extends ViewGroup implements ChartData {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
     }
+
+    // Daniel (2017-02-20 11:58:44): 현재 HighLight 된 x 좌표 Range
+    protected Range mHighLightXRange;
+
+    OnTouchListener mTouchListener = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                case MotionEvent.ACTION_DOWN:
+                    float X = event.getX();
+                    float Y = event.getY();
+
+                    Log.i(TAG, "ACTION_DOWN = " + X + " | " + Y);
+//                    if (mGraphSize != null) X += mGraphSize.left;
+                    if (mBarData != null && mBarData.hasBarDataList()) {
+                        BarDataSet barDataSet = mBarData.getBarDataList().get(0);
+                        if (barDataSet.hasEntries()) {
+                            for (BarEntry barEntry : barDataSet.getEntries()) {
+                                // Daniel (2017-02-20 11:57:04):
+                                // TODO:
+                                if (barEntry.getEntryXRange() != null && mGraphSize != null &&
+                                        barEntry.getEntryXRange().contains(X - mGraphSize.left)) {
+                                    mHighLightXRange = barEntry.getEntryXRange();
+                                    Log.v(TAG, "현재 selected 된 X column range = " + barEntry.getEntryXRange().toString());
+                                    invalidate();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+            }
+            return false;
+        }
+    };
 }
