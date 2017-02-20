@@ -1,6 +1,7 @@
 package com.danielworld.graph.chart;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 
 import com.danielworld.graph.model.BarData;
@@ -30,5 +31,20 @@ public class LineChart extends Chart {
         this.mBarData = barData;
         this.mHighLightXRange = null;
         invalidate();
+    }
+
+    @Override
+    public void setBackgroundGradient(@ColorInt int startColor, @ColorInt int endColor) {
+        mBackgroundColor = 0;
+        mBackgroundGradient = null;
+        mBackgroundGradientColorStart = startColor;
+        mBackgroundGradientColorEnd = endColor;
+//        invalidate();
+    }
+
+    @Override
+    public void setDottedLineColor(@ColorInt int dottedLineColor) {
+        mDottedLineColor = dottedLineColor;
+//        invalidate();
     }
 }

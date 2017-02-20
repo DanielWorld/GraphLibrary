@@ -1,5 +1,7 @@
 package com.danielworld.graph;
 
+import android.support.annotation.ColorInt;
+
 import com.danielworld.graph.model.BarData;
 
 /**
@@ -10,4 +12,8 @@ import com.danielworld.graph.model.BarData;
 public interface ChartData {
 
     void setData(BarData barData);
+
+    void setBackgroundGradient(@ColorInt int startColor, @ColorInt int endColor);
+
+    void setDottedLineColor(@ColorInt int dottedLineColor);
 }

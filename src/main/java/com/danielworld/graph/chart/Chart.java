@@ -40,9 +40,10 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
     private final String TAG = "GraphLibrary";
 
-    private @ColorInt int mBackgroundColor = 0;
-    private @ColorInt int mBackgroundGradientColorStart = 0;
-    private @ColorInt int mBackgroundGradientColorEnd = 0;
+    protected @ColorInt int mBackgroundColor = 0;
+    protected @ColorInt int mBackgroundGradientColorStart = 0;
+    protected @ColorInt int mBackgroundGradientColorEnd = 0;
+    protected @ColorInt int mDottedLineColor = 0;
     private int mCircleRadius;
     private int mEntryLineWidth;
     private int mTopPadding;
@@ -106,6 +107,9 @@ public abstract class Chart extends ViewGroup implements ChartData {
             mBackgroundGradientColorEnd = typedArray.getColor(R.styleable.Chart_backgroundGradientColorEnd,
                     getResources().getColor(android.R.color.transparent));
         }
+
+        mDottedLineColor = typedArray.getColor(R.styleable.Chart_dottedLineColor,
+                getResources().getColor(android.R.color.transparent));
 
         mCircleRadius = typedArray.getDimensionPixelSize(R.styleable.Chart_circleRadius, 6);
         mEntryLineWidth = typedArray.getDimensionPixelSize(R.styleable.Chart_entryLineWidth, 3);
@@ -204,7 +208,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
     // 점선 설정
     private void initDottedLine() {
-        mDottedLine.setColor(Color.parseColor("#537095"));
+        mDottedLine.setColor(mDottedLineColor);
         mDottedLine.setStyle(Paint.Style.STROKE);
         mDottedLine.setStrokeWidth(3);
         mDottedLine.setPathEffect(mDottedLinePathEffect);

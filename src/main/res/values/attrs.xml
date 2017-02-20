@@ -5,6 +5,7 @@
         <attr name="backgroundColor" format="color"/>
         <attr name="backgroundGradientColorStart" format="color"/>
         <attr name="backgroundGradientColorEnd" format="color"/>
+        <attr name="dottedLineColor" format="color"/>
         <attr name="circleRadius" format="dimension"/>
         <attr name="entryLineWidth" format="dimension"/>
         <attr name="graphPaddingRight" format="dimension"/>
