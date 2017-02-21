@@ -582,7 +582,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
     protected ValueFormatter mValueFormatter = new ValueFormatter() {
         @Override
         public String getValueFormatter(int x) {
-            return ChartDateUtil.getDate(ChartDateUtil.getTimeFromDanielDayIndex(x), "M/d");
+            return String.valueOf(x);
         }
     };
 }

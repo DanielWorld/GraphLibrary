@@ -2,6 +2,7 @@ package com.danielworld.graph.model;
 
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +33,40 @@ public class BarDataSet {
         this.calcXSize(entries);
         this.calcYSize(entries);
         this.mBarColor = barColor;
+    }
+
+    /**
+     * {@link #BarDataSet(ArrayList, int)} 과 달리 {@code startX} 부터 {@code endX} 까지 Entry 만 보여준다.
+     * @param entries
+     * @param barColor
+     * @param startX
+     * @param endX
+     */
+    public BarDataSet(@NonNull ArrayList<BarEntry> entries, @ColorInt int barColor, int startX, int endX) {
+        this.mEntries = entries;
+        sort();
+        fillEmptyEntries(startX, endX);
+        this.calcXSize(entries);
+        this.calcYSize(entries);
+        this.mBarColor = barColor;
+    }
+
+    private void fillEmptyEntries(int startX, int endX) {
+        if (startX > endX) throw new IllegalArgumentException("start X should be smaller than end X!");
+
+        ArrayList<BarEntry> tempEntries = new ArrayList<>();
+        int entryIndex = 0;
+        for (int i = startX; i <= endX; i++)  {
+            if (entryIndex < mEntries.size() && mEntries.get(entryIndex).getX() == i) {
+                tempEntries.add(mEntries.get(entryIndex));
+                entryIndex++;
+            } else {
+                tempEntries.add(new BarEntry(i, 0));
+            }
+        }
+
+        mEntries.clear();
+        mEntries.addAll(tempEntries);
     }
 
     /**
