@@ -1,8 +1,8 @@
 package com.danielworld.graph.model;
 
 /**
- * Graph 의 원시형 Entry
- * <p>y 값 및 데이터를 지님</p>
+ * Graph's primitive Entry
+ * <p>has y value and data</p>
  * <br><br>
  * Copyright (c) 2014-2017 op7773hons@gmail.com
  * Created by Daniel Park on 2017-02-18.

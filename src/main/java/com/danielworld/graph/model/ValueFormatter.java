@@ -7,5 +7,10 @@ package com.danielworld.graph.model;
 
 public interface ValueFormatter {
 
+    /**
+     * x value formatter
+     * @param x
+     * @return
+     */
     String getValueFormatter(int x);
 }

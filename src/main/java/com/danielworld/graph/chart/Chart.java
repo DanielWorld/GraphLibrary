@@ -58,25 +58,25 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
     protected String todayTitle = "Today";
 
-    Rect mCanvasSize = new Rect();          // 실제 Canvas 사이즈
-    RectF mGraphSize = new RectF();         // Canvas 에서 padding 을 더해서 나온 Graph 사이즈
+    Rect mCanvasSize = new Rect();          // real Canvas size
+    RectF mGraphSize = new RectF();         // graph size
 
-    // Daniel (2017-02-20 14:51:47): 배경 관련
+    // Daniel (2017-02-20 14:51:47): background
     Paint mBackgroundPaint = new Paint();
     LinearGradient mBackgroundGradient;
 
-    // Daniel (2017-02-18 17:22:13): 점선 관련
+    // Daniel (2017-02-18 17:22:13): dotted line
     Paint mDottedLine = new Paint();
     Path mDottedLInePath = new Path();
     DashPathEffect mDottedLinePathEffect = new DashPathEffect(new float[]{5, 30}, 0);
 
-    // 원과 원사이 라인
+    // line between entries
     Paint mEntryLine = new Paint();
 
-    // 원
+    // circle
     Paint mCirclePaint = new Paint();
 
-    // X축 라벨
+    // Axis x label
     Paint mTextPaint = new Paint();
     Paint mTextBackgroundPaint = new Paint();
 
@@ -139,31 +139,29 @@ public abstract class Chart extends ViewGroup implements ChartData {
         super.onDraw(canvas);
         if (canvas == null) return;
 
-        // 캔버스 크기 구하기
+        // get canvas real size
         canvas.getClipBounds(mCanvasSize);
 
-        // 실제 그래프 사이즈 구하기
         calcGraphSize();
 
-        // 평행 점선 Paint 설정
         initDottedLine();
 
-        // Entry 사이 line Paint 설정
+        // line paint between entries
         initEntryLine();
 
-        // Entry 원형 설정
+        // Entry circle
         initEntryCircle();
 
-        // x 라벨 Paint 설정
+        // x label Paint
         initXLabel();
 
-        // HighLight Paint 설정
+        // HighLight Paint
         initHighLight();
 
         // start at 0,0 and go to 0,max to use a vertical
         // gradient the full height of the screen.
         if (mBackgroundColor == 0) {
-            // Daniel (2017-02-20 15:03:48): Gradient 배경색 설정
+            // Daniel (2017-02-20 15:03:48): set Gradient background color
             if (mBackgroundGradient == null)
                 mBackgroundGradient = new LinearGradient(0, 0, 0, mCanvasSize.height(), mBackgroundGradientColorStart, mBackgroundGradientColorEnd, Shader.TileMode.MIRROR);
 
@@ -171,41 +169,39 @@ public abstract class Chart extends ViewGroup implements ChartData {
             canvas.drawPaint(mBackgroundPaint);
         }
         else {
-            // Daniel (2017-02-17 17:41:11): 배경색 설정
+            // Daniel (2017-02-17 17:41:11): set background color
             canvas.drawColor(mBackgroundColor);
         }
 
         if (mBarData != null) {
             mBarData.setContainerSize(mGraphSize.width(), mGraphSize.height());
 
-            // 0. HighLight 존재할 경우 배경 부분 그려줘야 함
+            // 0. if there is HighLight entry, make sure to draw highlight background first
             drawHighLightBackground(canvas);
 
-            // 1. 해당 Max y값과 Min y(== 0) 을 기준으로 가로로 점선 긋기 (먼저 완료 필수)
+            // 1. draw horizontal dotted lines
             drawDottedLines(canvas, (int) mBarData.getMaxY());
 
-            // 2. 원형과 원형사이 선 그리기
-//            drawLinesBetweenEntry(canvas, mBarData.getBarDataList());
 
             for (BarDataSet barDataSet : mBarData.getBarDataList()) {
 
-                // 2. 원형과 원형사이 선 그리기
+                // 2. draw lines between entries
                 drawLinesBetweenEntry(canvas, barDataSet);
 
-                // 2-1. 큰 원형 그리기
-                // 2-2. 작은 원형 그리기
+                // 2-1. draw big circle
+                // 2-2. draw small circle
                 drawCircleEntries(canvas, barDataSet);
 
-                // 3. x축 라벨 그리기
+                // 3. draw axis x label
                 drawXAxisLabel(canvas, barDataSet);
             }
 
-            // 4. HighLight 된 그리기
+            // 4. draw entry which is HighLighted
             drawHighLightEntries(canvas, mBarData.getBarDataList());
         }
     }
 
-    // 실제 그래프 사이즈 설정
+    // set calculated graph size
     private void calcGraphSize() {
         mGraphSize.left = mLeftPadding;
         mGraphSize.top = mTopPadding;
@@ -213,7 +209,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
         mGraphSize.right = mCanvasSize.width() - mRightPadding;
     }
 
-    // 점선 설정
+    // set dotted line paint
     private void initDottedLine() {
         mDottedLine.setColor(mDottedLineColor);
         mDottedLine.setStyle(Paint.Style.STROKE);
@@ -221,19 +217,19 @@ public abstract class Chart extends ViewGroup implements ChartData {
         mDottedLine.setPathEffect(mDottedLinePathEffect);
     }
 
-    // Entry 사이의 Line 설정
+    // set entry line paint
     private void initEntryLine() {
         mEntryLine.setColor(Color.parseColor("#332983"));
         mEntryLine.setStyle(Paint.Style.STROKE);
         mEntryLine.setStrokeWidth(mEntryLineWidth);
     }
 
-    // Entry 원형 설정
+    // set circle entry paint
     private void initEntryCircle() {
         mCirclePaint.setStyle(Paint.Style.FILL);
     }
 
-    // x 값 라벨 설정
+    // set x label paint
     private void initXLabel() {
         mTextPaint.setColor(Color.WHITE);
         mTextPaint.setTextSize(mLabelTextSize);
@@ -244,7 +240,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
         mTextBackgroundPaint.setStyle(Paint.Style.FILL);
     }
 
-    // HighLight 설정
+    // set HighLight paint
     private void initHighLight() {
         mHighLightBackgroundPaint.setColor(Color.parseColor("#1Affffff"));
         mHighLightBackgroundPaint.setStyle(Paint.Style.FILL);
@@ -254,7 +250,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
         mHighLightTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    // HighLight 부분 배경 그리기
+    // draw HighLight background
     private void drawHighLightBackground(Canvas canvas) {
         if (mHighLightXRange == null) return;
 
@@ -276,26 +272,22 @@ public abstract class Chart extends ViewGroup implements ChartData {
         }
     }
 
-    // 평행 점선 그리기
+    // draw horizontal dotted lines
     private void drawDottedLines(Canvas canvas, int maxY) {
         int dottedLineCount;
-//        if (maxY % 4 == 0) {
-//            // maxY 는 4의 배수 -> 0을 포함한 라인 총 5개
-//            dottedLineCount = 5;
-//        } else
         if (maxY % 3 == 0) {
-            // maxY 는 3의 배수 -> 0을 포함한 라인 총 4개
+            // maxY is multiplied by 3 -> line's count is 4 (including 0)
             dottedLineCount = 4;
         } else if (maxY % 2 == 0) {
-            // maxY 는 2의 배수 -> 0을 포함한 라인 총 3개
+            // maxY is multiplied by 2 -> line's count is 3 (including 0)
             dottedLineCount = 3;
         } else {
-            dottedLineCount = 2; // -> 0과 최대값만 그림 총 2개
+            dottedLineCount = 2; // -> line's count is 2 (including 0 and max Y)
         }
         Log.e(TAG, "dottedLineCount = " + dottedLineCount);
         Log.d(TAG, "======================================");
 
-        // 실제 height 에서 (dottedLineCount - 1) 만큼 나눔
+        // divide height by ((dottedLineCount - 1)
         float dottedLineGap = mGraphSize.height() / (dottedLineCount - 1);
         float startX = mGraphSize.left, startY = mGraphSize.bottom,
                 stopX = mGraphSize.right, stopY = mGraphSize.bottom;
@@ -314,7 +306,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
         }
     }
 
-    // Entry 사이에 라인 그리기
+    // draw line between entries
     private void drawLinesBetweenEntry(Canvas canvas, List<BarDataSet> barDataSetList) {
         for (BarDataSet barDataSet : barDataSetList) {
             mEntryLine.setColor(barDataSet.getBarColor());
@@ -334,7 +326,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
         }
     }
 
-    // Entry 사이에 라인 그리기
+    // draw line between entries
     private void drawLinesBetweenEntry(Canvas canvas, BarDataSet barDataSet) {
         mEntryLine.setColor(barDataSet.getBarColor());
 
@@ -352,7 +344,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
         }
     }
 
-    // 원형 Entry 그리기
+    // draw circle entry
     private void drawCircleEntries(Canvas canvas, BarDataSet barDataSet) {
         mCirclePaint.setStyle(Paint.Style.FILL);
 
@@ -363,7 +355,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
                     barDataSet.getEntries().get(i).getEntryXRange().contains(mHighLightXRange.getTo())) {
                     // Daniel (2017-02-20 16:46:06): if this entry is selected, then do nothing!
             } else {
-                // 1. 큰 원형 먼저 그리기
+                // 1. draw big circle entry
                 mCirclePaint.setColor(barDataSet.getBarColor());
                 canvas.drawCircle(
                         mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
@@ -372,7 +364,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
                         mCirclePaint
                 );
 
-                // 2. 작은 원형 그리기
+                // 2. draw small circle entry
                 mCirclePaint.setColor(Color.WHITE);
                 canvas.drawCircle(
                         mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
@@ -385,7 +377,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
     }
 
     Rect textBounds = new Rect();
-    // x축 라벨 그리기
+
+    // draw x axis label
     private void drawXAxisLabel(Canvas canvas, BarDataSet barDataSet) {
         for (int i = 0; i < barDataSet.getEntries().size(); i++) {
             if (ChartDateUtil.getDate(System.currentTimeMillis(), "M/d")
@@ -434,7 +427,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
     }
 
     Rect highLightTextBounds = new Rect();
-    // HighLight Entry 그리기
+    // draw HighLight Entry
     private void drawHighLightEntries(Canvas canvas, List<BarDataSet> barDataSetList) {
         // Daniel (2017-02-20 15:58:51): This is useful logic! Don't remove it!
 //        for (BarDataSet barDataSet : barDataSetList) {
@@ -443,7 +436,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
 //                if (mHighLightXRange != null &&
 //                        barDataSet.getEntries().get(i).getEntryXRange() != null &&
 //                        barDataSet.getEntries().get(i).getEntryXRange().contains(mHighLightXRange.getTo())) {
-//                    // 1. 큰 원형 먼저 그리기
+
 //                    mCirclePaint.setColor(Color.WHITE);
 //                    canvas.drawCircle(
 //                            mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
@@ -452,7 +445,6 @@ public abstract class Chart extends ViewGroup implements ChartData {
 //                            mCirclePaint
 //                    );
 //
-//                    // 2. HighLight text 그리기
 //                    String valueY = String.valueOf((int) barDataSet.getEntries().get(i).getY());
 //                    mHighLightTextPaint.setColor(barDataSet.getBarColor());
 //                    mHighLightTextPaint.getTextBounds(valueY, 0, valueY.length(), highLightTextBounds);
@@ -475,33 +467,32 @@ public abstract class Chart extends ViewGroup implements ChartData {
                         barDataSetList.get(barDataSetIndex).getEntries().get(i).getEntryXRange().contains(mHighLightXRange.getTo())) {
 
                     // Daniel (2017-02-20 16:00:22):
-                    // TODO: 현재는 무조건 BarDataSet 이 2개라는 가정하에 진행...
-                    // TODO: 만약 그 이상일 경우 답없음
+                    // This only works when BarDataSet size is equals to 2
                     if (barDataSetList.size() == 2) {
                         BarEntry firstEntry = barDataSetList.get(0).getEntries().get(i);
                         BarEntry secondEntry = barDataSetList.get(1).getEntries().get(i);
 
                         float differenceGap = Math.abs(firstEntry.getEntryYCoordinate() - secondEntry.getEntryYCoordinate());
 
-                        // 2개의 Entry 값이 동일하지는 않지만 반지름 이하의 좌표 차이 밖에 안남
+                        // two of Entries value are not equal and their difference is only smaller than mCircleRadius * 1.5f
                         if (differenceGap <= mCircleRadius * 1.5f && differenceGap != 0) {
-                            // 1번째 Entry 가 2번째 Entry 보다 밑에 있을 경우
+                            // if first Entry Y coordinates is bigger than second Entry Y coordinates
                             if (firstEntry.getEntryYCoordinate() > secondEntry.getEntryYCoordinate()) {
-                                // 1번째 Entry 를 밑으로 내림
+                                // down first Entry Y coordinates by mCircleRadius
                                 firstEntry.setEntryYCoordinate(firstEntry.getEntryYCoordinate() + mCircleRadius);
-                                // 2번째 Entry 를 위로 올림
+                                // up second Entry Y coordinates by mCircleRadius
                                 secondEntry.setEntryYCoordinate(secondEntry.getEntryYCoordinate() - mCircleRadius);
                             } else {
-                                // 2번째 Entry 를 밑으로 내림
+                                // down second Entry Y coordinates by mCircleRadius
                                 secondEntry.setEntryYCoordinate(secondEntry.getEntryYCoordinate() + mCircleRadius);
-                                // 1번째 Entry 를 위로 올림
+                                // up first Entry Y coordinates by mCircleRadius
                                 firstEntry.setEntryYCoordinate(firstEntry.getEntryYCoordinate() - mCircleRadius);
                             }
 
                         }
                     }
 
-                    // 1. 큰 원형 먼저 그리기
+                    // 1. draw big HighLight circle entry
                     mCirclePaint.setColor(Color.WHITE);
                     canvas.drawCircle(
                             mGraphSize.left + barDataSetList.get(barDataSetIndex).getEntries().get(i).getEntryCenterX(),
@@ -510,7 +501,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
                             mCirclePaint
                     );
 
-                    // 2. HighLight text 그리기
+                    // 2. draw HighLight text
                     String valueY = String.valueOf((int) barDataSetList.get(barDataSetIndex).getEntries().get(i).getY());
                     mHighLightTextPaint.setColor(barDataSetList.get(barDataSetIndex).getBarColor());
                     mHighLightTextPaint.getTextBounds(valueY, 0, valueY.length(), highLightTextBounds);
@@ -522,7 +513,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
                             mHighLightTextPaint
                     );
 
-                    // Daniel (2017-02-20 16:02:11): 현재 로직에서 HighLight 는 무조건 1번이므로 break 처리한다.
+                    // Daniel (2017-02-21 11:17:03): In logic, there is only one HighLight, so break;
                     break;
                 }
             }
@@ -534,11 +525,11 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
     }
 
-    // Daniel (2017-02-20 11:58:44): 현재 HighLight 된 x 좌표 Range
+    // Daniel (2017-02-20 11:58:44): Current HighLighted x coordinates range
     protected Range mHighLightXRange;
-    // HighLight 배경
+    // HighLight background paint
     Paint mHighLightBackgroundPaint = new Paint();
-    // HighLight 텍스트
+    // HighLight text paint
     Paint mHighLightTextPaint = new Paint();
 
     OnTouchListener mTouchListener = new OnTouchListener() {
@@ -561,10 +552,10 @@ public abstract class Chart extends ViewGroup implements ChartData {
                                         barEntry.getEntryXRange().contains(X - mGraphSize.left)) {
                                     if (mHighLightXRange != null && mHighLightXRange.getFrom() == barEntry.getEntryXRange().getFrom()) {
                                         mHighLightXRange = null;
-                                        Log.d(TAG, "현재 unSelected 된 X column range = " + barEntry.getEntryXRange().toString());
+                                        Log.d(TAG, "current unSelected X column range = " + barEntry.getEntryXRange().toString());
                                     } else {
                                         mHighLightXRange = barEntry.getEntryXRange();
-                                        Log.v(TAG, "현재 selected 된 X column range = " + barEntry.getEntryXRange().toString());
+                                        Log.v(TAG, "current selected X column range = " + barEntry.getEntryXRange().toString());
                                     }
                                     invalidate();
                                     break;

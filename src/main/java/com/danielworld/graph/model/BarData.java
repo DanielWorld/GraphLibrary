@@ -12,14 +12,14 @@ public class BarData {
 
     protected List<BarDataSet> mBarDataList;
 
-    private float mMinY = 0;   // 0 은 무조건 보여줘야 함..
+    private float mMinY = 0;
     private float mMaxY = Float.MIN_VALUE;
 
     private int mMinX = Integer.MAX_VALUE;
     private int mMaxX = Integer.MIN_VALUE;
 
-    private int mMaxEntrySize = 0;  // BarDataSet 중 가장 많은 entry 수
-    private int mXGap = 0;      // 하나의 Entry x 값 공간 크기
+    private int mMaxEntrySize = 0;  // the max entry size among BarDataSet
+    private int mXGap = 0;      // the width size of space in one Entry
 
 
     public BarData(BarDataSet... dataSets) {
@@ -65,8 +65,7 @@ public class BarData {
     }
 
     /**
-     * 그래프를 설정할 size 설정 <br>
-     *     <p>1. 각각 그래프 x 갯수, 및 최소/최대 y 값을 이용해서 설정</p>
+     * set size to calculate graph size <br>
      * @param width
      * @param height
      */
@@ -75,8 +74,8 @@ public class BarData {
 
         mXGap = (int) (width / getMaxEntrySize());   // x range 범위
 
-        // 1. 해당 mXGap 을 이용해서 x range 설정하기
-        // 2. maxY 와 height 로 해당 Entry 의 실제 그래프 y좌표 설정하기
+        // 1. set x range using mXGap
+        // 2. set y coordinates using maxY and height
         for (BarDataSet barDataSet : mBarDataList) {
             int tempXGap = 0;
             float tempYGap = 1;

@@ -176,9 +176,9 @@ public class ChartDateUtil {
 			return (endYear - startYear) * 12 + endMonth - startMonth + (includeTarget ? 1 : 0);
 		}
 		else {
-			// startMonth 가 endMonth 보다 클 경우
-			// 1. endTime 의 Year 에서 startTime 의 Year 를 뺀 뒤, 그 값 * 12 해서 endMonth 에 붙인다.
-			// 2. 그 변형된 endMonth - startMonth 하면 됨
+			// if startMonth is bigger than endMonth
+			// 1. minus from endTime's Year to startTime's Year, and then multiply by 12 and added to endMonth
+			// 2. that endMonth should be minus to startMonth
 			endMonth += (endYear - startYear) * 12;
 			return endMonth - startMonth + (includeTarget ? 1 : 0);
 		}

@@ -5,8 +5,8 @@ import android.os.ParcelFormatException;
 import android.os.Parcelable;
 
 /**
- * Graph 하나의 Entry 정보
- * <p>x, y 값, Entry 데이터를 지님</p>
+ * One entry's in Graph information
+ * <p>value x, value y and Entry data</p>
  * <br><br>
  * Copyright (c) 2014-2017 op7773hons@gmail.com
  * Created by Daniel Park on 2017-02-18.

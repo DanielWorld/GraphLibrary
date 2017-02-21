@@ -17,9 +17,8 @@ public class BarDataSet {
 
     private ArrayList<BarEntry> mEntries;
 
-//    private double mMinY = Double.MAX_VALUE;     // 최소 y값
-    private float mMinY = 0;     // 0은 무조건 보여줘야 함
-    private float mMaxY = Float.MIN_VALUE;     // 최대 y값
+    private float mMinY = 0;
+    private float mMaxY = Float.MIN_VALUE;
 
     private int mMinX = Integer.MAX_VALUE;
     private int mMaxX = Integer.MIN_VALUE;
@@ -36,7 +35,7 @@ public class BarDataSet {
     }
 
     /**
-     * {@link #BarDataSet(ArrayList, int)} 과 달리 {@code startX} 부터 {@code endX} 까지 Entry 만 보여준다.
+     * Unlike {@link #BarDataSet(ArrayList, int)}, graph shows from {@code startX} to {@code endX} Entries.
      * @param entries
      * @param barColor
      * @param startX
@@ -70,7 +69,7 @@ public class BarDataSet {
     }
 
     /**
-     * x 값 기준으로 정렬
+     * sort list by x value
      */
     private void sort() {
         Collections.sort(mEntries, new Comparator<BarEntry>() {
@@ -82,7 +81,7 @@ public class BarDataSet {
     }
 
     /**
-     * 최소 / 최대 x값 구하기
+     * calculate min / max x value
      * @param xValues
      */
     private void calcXSize(ArrayList<BarEntry> xValues) {
@@ -94,7 +93,7 @@ public class BarDataSet {
     }
 
     /**
-     * 최소 / 최대 y값 구하기
+     * calculate min / max y value
      * @param yValues
      */
     private void calcYSize(ArrayList<BarEntry> yValues) {

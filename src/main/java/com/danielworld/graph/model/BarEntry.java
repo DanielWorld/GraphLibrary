@@ -1,8 +1,8 @@
 package com.danielworld.graph.model;
 
 /**
- * Graph 하나의 구체적인 Entry 정보
- * <p>x, y 값, x, y 범위, Entry 데이터를 지님</p>
+ * One Entry's specific information in graph
+ * <p>value x, value y, range coordinates x, coordinates y, Entry data</p>
  * <br><br>
  * Copyright (c) 2014-2017 op7773hons@gmail.com
  * Created by Daniel Park on 2017-02-18.
@@ -10,14 +10,14 @@ package com.danielworld.graph.model;
 
 public class BarEntry extends Entry {
     private Range entryXRange;
-    private float entryYCoordinate;    // 그래프 상의 실제 y 좌표값 (TODO: y값이 아님!!)
+    private float entryYCoordinate;    // real y coordinates in Graph size (TODO: not y value!)
 
     public BarEntry(int x, float y) {
         super(x, y);
     }
 
     /**
-     * 해당 Entry x 의 범위 설정
+     * set Entry x coordinates range
      * @param x
      * @param y
      */
@@ -37,7 +37,7 @@ public class BarEntry extends Entry {
     }
 
     /**
-     * 그래프 상의 실제 y 좌표값 설정
+     * set y coordinates in Graph
      * @param yCoordinate
      */
     public void setEntryYCoordinate(float yCoordinate) {
@@ -49,7 +49,7 @@ public class BarEntry extends Entry {
     }
 
     /**
-     * Entry x 사이 좌표 centerX 값
+     * get center x from {@link #entryXRange}
      * @return
      */
     public float getEntryCenterX() {
