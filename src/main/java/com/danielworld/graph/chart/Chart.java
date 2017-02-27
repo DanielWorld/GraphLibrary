@@ -45,6 +45,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
     protected @ColorInt int mBackgroundGradientColorEnd = 0;
     protected @ColorInt int mDottedLineColor = 0;
     private int mCircleRadius;
+    private int mInnerCircleRadius;
     private int mEntryLineWidth;
     private int mTopPadding;
     private int mLeftPadding;
@@ -115,6 +116,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
                 getResources().getColor(android.R.color.transparent));
 
         mCircleRadius = typedArray.getDimensionPixelSize(R.styleable.Chart_circleRadius, 6);
+        mInnerCircleRadius = typedArray.getDimensionPixelSize(R.styleable.Chart_innerCircleRadius, 3);
         mEntryLineWidth = typedArray.getDimensionPixelSize(R.styleable.Chart_entryLineWidth, 3);
 
         if (typedArray.hasValue(R.styleable.Chart_graphPadding)) {
@@ -369,7 +371,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
                 canvas.drawCircle(
                         mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
                         mGraphSize.bottom - barDataSet.getEntries().get(i).getEntryYCoordinate(),
-                        mCircleRadius / 2,
+                        mInnerCircleRadius,
                         mCirclePaint
                 );
             }
