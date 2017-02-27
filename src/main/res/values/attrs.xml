@@ -19,6 +19,7 @@
         <attr name="highLightBackgroundRadius" format="dimension"/>
         <attr name="highLightTopPadding" format="dimension"/>
         <attr name="highLightBottomPadding" format="dimension"/>
+        <attr name="highLightWidth" format="dimension"/>
         <attr name="highLightTextSize" format="dimension" />
     </declare-styleable>
 </resources>

@@ -42,6 +42,10 @@ public class Range {
         return value < this.from;
     }
 
+    public float getCenter() {
+        return (from + to) / 2;
+    }
+
     @Override
     public String toString() {
         return "From " + from + " to " + to;

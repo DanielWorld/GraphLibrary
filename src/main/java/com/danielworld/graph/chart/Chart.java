@@ -57,6 +57,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
     private int mHighLightBackgroundRadius;
     private int mHighLightTopPadding;
     private int mHighLightBottomPadding;
+    private int mHighLightWidth;
 
     protected BarData mBarData;
 
@@ -140,6 +141,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
         mHighLightTopPadding = typedArray.getDimensionPixelSize(R.styleable.Chart_highLightTopPadding, 0);
         mHighLightBottomPadding = typedArray.getDimensionPixelSize(R.styleable.Chart_highLightBottomPadding, 0);
+
+        mHighLightWidth = typedArray.getDimensionPixelSize(R.styleable.Chart_highLightWidth, 0);
 
         setOnTouchListener(mTouchListener);
     }
@@ -264,21 +267,40 @@ public abstract class Chart extends ViewGroup implements ChartData {
     private void drawHighLightBackground(Canvas canvas) {
         if (mHighLightXRange == null) return;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            canvas.drawRoundRect(
-                    mGraphSize.left + mHighLightXRange.getFrom(),
-                    mHighLightTopPadding,
-                    mGraphSize.left + mHighLightXRange.getTo(),
-                    mCanvasSize.height() - mHighLightBottomPadding,
-                    mHighLightBackgroundRadius, mHighLightBackgroundRadius,
-                    mHighLightBackgroundPaint);
+        if (mHighLightWidth <= 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                canvas.drawRoundRect(
+                        mGraphSize.left + mHighLightXRange.getFrom(),
+                        mHighLightTopPadding,
+                        mGraphSize.left + mHighLightXRange.getTo(),
+                        mCanvasSize.height() - mHighLightBottomPadding,
+                        mHighLightBackgroundRadius, mHighLightBackgroundRadius,
+                        mHighLightBackgroundPaint);
+            } else {
+                canvas.drawRect(
+                        mGraphSize.left + mHighLightXRange.getFrom(),
+                        mHighLightTopPadding,
+                        mGraphSize.left + mHighLightXRange.getTo(),
+                        mCanvasSize.height() - mHighLightBottomPadding,
+                        mHighLightBackgroundPaint);
+            }
         } else {
-            canvas.drawRect(
-                    mGraphSize.left + mHighLightXRange.getFrom(),
-                    mHighLightTopPadding,
-                    mGraphSize.left + mHighLightXRange.getTo(),
-                    mCanvasSize.height() - mHighLightBottomPadding,
-                    mHighLightBackgroundPaint);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                canvas.drawRoundRect(
+                        mGraphSize.left + mHighLightXRange.getCenter() - (mHighLightWidth / 2),
+                        mHighLightTopPadding,
+                        mGraphSize.left + mHighLightXRange.getCenter() + (mHighLightWidth / 2),
+                        mCanvasSize.height() - mHighLightBottomPadding,
+                        mHighLightBackgroundRadius, mHighLightBackgroundRadius,
+                        mHighLightBackgroundPaint);
+            } else {
+                canvas.drawRect(
+                        mGraphSize.left + mHighLightXRange.getCenter() - (mHighLightWidth / 2),
+                        mHighLightTopPadding,
+                        mGraphSize.left + mHighLightXRange.getCenter() + (mHighLightWidth / 2),
+                        mCanvasSize.height() - mHighLightBottomPadding,
+                        mHighLightBackgroundPaint);
+            }
         }
     }
 
