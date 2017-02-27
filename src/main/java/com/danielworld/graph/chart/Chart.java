@@ -51,9 +51,12 @@ public abstract class Chart extends ViewGroup implements ChartData {
     private int mLeftPadding;
     private int mRightPadding;
     private int mBottomPadding;
+    private int mLabelPaddingBottom;
     private int mLabelTextSize;
     private int mHighLightTextSize;
     private int mHighLightBackgroundRadius;
+    private int mHighLightTopPadding;
+    private int mHighLightBottomPadding;
 
     protected BarData mBarData;
 
@@ -129,9 +132,14 @@ public abstract class Chart extends ViewGroup implements ChartData {
             mBottomPadding = typedArray.getDimensionPixelSize(R.styleable.Chart_graphPaddingBottom, 0);
         }
 
+        mLabelPaddingBottom = typedArray.getDimensionPixelSize(R.styleable.Chart_graphLabelPaddingBottom, 0);
+
         mLabelTextSize = typedArray.getDimensionPixelSize(R.styleable.Chart_labelTextSize, 10);
         mHighLightTextSize = typedArray.getDimensionPixelSize(R.styleable.Chart_highLightTextSize, 9);
         mHighLightBackgroundRadius = typedArray.getDimensionPixelOffset(R.styleable.Chart_highLightBackgroundRadius, 6);
+
+        mHighLightTopPadding = typedArray.getDimensionPixelSize(R.styleable.Chart_highLightTopPadding, 0);
+        mHighLightBottomPadding = typedArray.getDimensionPixelSize(R.styleable.Chart_highLightBottomPadding, 0);
 
         setOnTouchListener(mTouchListener);
     }
@@ -259,17 +267,17 @@ public abstract class Chart extends ViewGroup implements ChartData {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             canvas.drawRoundRect(
                     mGraphSize.left + mHighLightXRange.getFrom(),
-                    0,
+                    mHighLightTopPadding,
                     mGraphSize.left + mHighLightXRange.getTo(),
-                    mCanvasSize.height(),
+                    mCanvasSize.height() - mHighLightBottomPadding,
                     mHighLightBackgroundRadius, mHighLightBackgroundRadius,
                     mHighLightBackgroundPaint);
         } else {
             canvas.drawRect(
                     mGraphSize.left + mHighLightXRange.getFrom(),
-                    0,
+                    mHighLightTopPadding,
                     mGraphSize.left + mHighLightXRange.getTo(),
-                    mCanvasSize.height(),
+                    mCanvasSize.height() - mHighLightBottomPadding,
                     mHighLightBackgroundPaint);
         }
     }
@@ -396,24 +404,24 @@ public abstract class Chart extends ViewGroup implements ChartData {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     canvas.drawRoundRect(
                             mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() - (textBounds.width() / 1.1f),
-                            mCanvasSize.height() - (mBottomPadding / 3) - (textBounds.height() / 0.7f),
+                            mCanvasSize.height() - mLabelPaddingBottom,
                             mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() + (textBounds.width() / 1.1f),
-                            mCanvasSize.height() - (mBottomPadding / 3) + (textBounds.height() / 1.5f),
+                            mCanvasSize.height() - mLabelPaddingBottom + (textBounds.height()),
                             textBounds.height(), textBounds.height(),
                             mTextBackgroundPaint);
                 } else {
                     canvas.drawRect(
                             mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() - (textBounds.width() / 1.1f),
-                            mCanvasSize.height() - (mBottomPadding / 3) - (textBounds.height() / 0.7f),
+                            mCanvasSize.height() - mLabelPaddingBottom,
                             mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() + (textBounds.width() / 1.1f),
-                            mCanvasSize.height() - (mBottomPadding / 3) + (textBounds.height() / 1.5f),
+                            mCanvasSize.height() - mLabelPaddingBottom + (textBounds.height()),
                             mTextBackgroundPaint);
                 }
 
                 canvas.drawText(
                         todayTitle,
                         mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
-                        mCanvasSize.height() - (mBottomPadding / 3),
+                        mCanvasSize.height() - mLabelPaddingBottom,
                         mTextPaint);
 
             } else {
@@ -422,7 +430,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
                 canvas.drawText(
                         mValueFormatter.getValueFormatter(barDataSet.getEntries().get(i).getX()),
                         mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX(),
-                        mCanvasSize.height() - (mBottomPadding / 3),
+                        mCanvasSize.height() - mLabelPaddingBottom,
                         mTextPaint);
             }
         }

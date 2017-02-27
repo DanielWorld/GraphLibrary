@@ -14,8 +14,11 @@
         <attr name="graphPaddingLeft" format="dimension"/>
         <attr name="graphPaddingBottom" format="dimension"/>
         <attr name="graphPadding" format="dimension"/>
+        <attr name="graphLabelPaddingBottom" format="dimension"/>
         <attr name="labelTextSize" format="dimension"/>
         <attr name="highLightBackgroundRadius" format="dimension"/>
+        <attr name="highLightTopPadding" format="dimension"/>
+        <attr name="highLightBottomPadding" format="dimension"/>
         <attr name="highLightTextSize" format="dimension" />
     </declare-styleable>
 </resources>
