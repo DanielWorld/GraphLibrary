@@ -73,7 +73,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
     // Daniel (2017-02-18 17:22:13): dotted line
     Paint mDottedLine = new Paint();
     Path mDottedLInePath = new Path();
-    DashPathEffect mDottedLinePathEffect = new DashPathEffect(new float[]{5, 30}, 0);
+    DashPathEffect mDottedLinePathEffect = new DashPathEffect(new float[]{5, 27}, 0);
 
     // line between entries
     Paint mEntryLine = new Paint();
@@ -193,7 +193,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
             drawHighLightBackground(canvas);
 
             // 1. draw horizontal dotted lines
-            drawDottedLines(canvas, (int) mBarData.getMaxY());
+//            drawDottedLines(canvas, (int) mBarData.getMaxY());
+            drawDottedLines(canvas, (int) mBarData.getMaxY(), mBarData.getBarDataList());
 
 
             for (BarDataSet barDataSet : mBarData.getBarDataList()) {
@@ -331,6 +332,66 @@ public abstract class Chart extends ViewGroup implements ChartData {
             mDottedLInePath.reset();
             mDottedLInePath.moveTo(startX, startY);
             mDottedLInePath.lineTo(stopX, stopY);
+//            canvas.drawLine(startX, startY, stopX, stopY, mDottedLine);
+            canvas.drawPath(mDottedLInePath, mDottedLine);
+            startY -= dottedLineGap;
+            stopY -= dottedLineGap;
+        }
+    }
+
+    /**
+     * Useless....
+     * @param canvas
+     * @param maxY
+     * @param barDataSetList
+     */
+    @Deprecated
+    private void drawDottedLines(Canvas canvas, int maxY, List<BarDataSet> barDataSetList) {
+
+        Range currentRange = null;
+
+        for (BarDataSet barDataSet : barDataSetList) {
+            for (BarEntry barEntry : barDataSet.getEntries()) {
+                currentRange = barEntry.getEntryXRange();
+
+                if (currentRange != null)
+                    break;
+            }
+            break;
+        }
+
+        int dottedLineCount;
+        if (maxY % 3 == 0) {
+            // maxY is multiplied by 3 -> line's count is 4 (including 0)
+            dottedLineCount = 4;
+        } else if (maxY % 2 == 0) {
+            // maxY is multiplied by 2 -> line's count is 3 (including 0)
+            dottedLineCount = 3;
+        } else {
+            dottedLineCount = 2; // -> line's count is 2 (including 0 and max Y)
+        }
+        Log.e(TAG, "dottedLineCount = " + dottedLineCount);
+        Log.d(TAG, "======================================");
+
+        // divide height by ((dottedLineCount - 1)
+        float dottedLineGap = mGraphSize.height() / (dottedLineCount - 1);
+        float startX = mGraphSize.left, startY = mGraphSize.bottom,
+                stopX = mGraphSize.right, stopY = mGraphSize.bottom;
+
+        for (int i = 0; i < dottedLineCount; i++) {
+            Log.i(TAG, "start x, y = " + startX + " | " + startY);
+            Log.w(TAG, "stop x, y = " + stopX + " | " + stopY);
+            Log.d(TAG, "========================================");
+            mDottedLInePath.reset();
+
+            if (currentRange != null) {
+                mDottedLInePath.moveTo(startX + (currentRange.getTo() / 2), startY);
+                mDottedLInePath.lineTo(stopX - (currentRange.getTo() / 2), stopY);
+            } else {
+
+                mDottedLInePath.moveTo(startX, startY);
+                mDottedLInePath.lineTo(stopX, stopY);
+            }
 //            canvas.drawLine(startX, startY, stopX, stopY, mDottedLine);
             canvas.drawPath(mDottedLInePath, mDottedLine);
             startY -= dottedLineGap;
