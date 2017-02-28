@@ -426,17 +426,19 @@ public abstract class Chart extends ViewGroup implements ChartData {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     canvas.drawRoundRect(
                             mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() - (textBounds.width() / 1.1f),
-                            mCanvasSize.height() - mLabelPaddingBottom,
+                            mCanvasSize.height() - mLabelPaddingBottom - (mLabelPaddingBottom + textBounds.height()) / 2,
                             mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() + (textBounds.width() / 1.1f),
-                            mCanvasSize.height() - mLabelPaddingBottom + (textBounds.height()),
+                            mCanvasSize.height() - mLabelPaddingBottom + (mLabelPaddingBottom + textBounds.height()) / 2
+                                    - textBounds.height() / 1.5f,
                             textBounds.height(), textBounds.height(),
                             mTextBackgroundPaint);
                 } else {
                     canvas.drawRect(
                             mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() - (textBounds.width() / 1.1f),
-                            mCanvasSize.height() - mLabelPaddingBottom,
+                            mCanvasSize.height() - mLabelPaddingBottom - (mLabelPaddingBottom + textBounds.height()) / 2,
                             mGraphSize.left + barDataSet.getEntries().get(i).getEntryCenterX() + (textBounds.width() / 1.1f),
-                            mCanvasSize.height() - mLabelPaddingBottom + (textBounds.height()),
+                            mCanvasSize.height() - mLabelPaddingBottom + (mLabelPaddingBottom + textBounds.height()) / 2
+                                    - textBounds.height() / 1.5f,
                             mTextBackgroundPaint);
                 }
 
