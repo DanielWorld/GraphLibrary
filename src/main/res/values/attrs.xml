@@ -21,5 +21,6 @@
         <attr name="highLightBottomPadding" format="dimension"/>
         <attr name="highLightWidth" format="dimension"/>
         <attr name="highLightTextSize" format="dimension" />
+        <attr name="includeBothSides" format="boolean"/>
     </declare-styleable>
 </resources>

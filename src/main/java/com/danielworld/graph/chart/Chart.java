@@ -58,6 +58,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
     private int mHighLightTopPadding;
     private int mHighLightBottomPadding;
     private int mHighLightWidth;
+    private boolean mIncludeBothSides;
 
     protected BarData mBarData;
 
@@ -144,6 +145,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
         mHighLightWidth = typedArray.getDimensionPixelSize(R.styleable.Chart_highLightWidth, 0);
 
+        mIncludeBothSides = typedArray.getBoolean(R.styleable.Chart_includeBothSides, false);
+
         setOnTouchListener(mTouchListener);
     }
 
@@ -193,8 +196,10 @@ public abstract class Chart extends ViewGroup implements ChartData {
             drawHighLightBackground(canvas);
 
             // 1. draw horizontal dotted lines
-//            drawDottedLines(canvas, (int) mBarData.getMaxY());
-            drawDottedLines(canvas, (int) mBarData.getMaxY(), mBarData.getBarDataList());
+            if (mIncludeBothSides)
+                drawDottedLines(canvas, (int) mBarData.getMaxY());
+            else
+                drawDottedLines(canvas, (int) mBarData.getMaxY(), mBarData.getBarDataList());
 
 
             for (BarDataSet barDataSet : mBarData.getBarDataList()) {
