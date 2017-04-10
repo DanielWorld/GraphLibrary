@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="bapul.graphexample.MainActivity">
+
+    <com.danielworld.graph.chart.LineChart
+        android:id="@+id/GraphChart"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        app:backgroundGradientColorEnd="#435f82"
+        app:backgroundGradientColorStart="#5376a2"
+        app:circleRadius="10dp"
+        app:dottedLineColor="#537095"
+        app:entryLineWidth="3dp"
+        app:graphPaddingBottom="40dp"
+        app:graphPaddingLeft="20dp"
+        app:graphPaddingRight="20dp"
+        app:graphPaddingTop="20dp"
+        app:highLightTextSize="9sp"
+        app:labelTextSize="10sp"
+        app:highLightBackgroundRadius="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/lienarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/GraphChart"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/maxEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/GraphChart"
+            android:hint="최대값"
+            android:inputType="numberDecimal"
+            android:text="130" />
+
+        <EditText
+            android:id="@+id/gradientStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="배경색 start"
+            android:text="5376a2" />
+
+        <EditText
+            android:id="@+id/gradientEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="배경색 end"
+            android:text="435f82" />
+
+        <EditText
+            android:id="@+id/dottedLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="점선 색"
+            android:text="537095" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lienarLayout"
+        android:text="Generate" />
+
+</RelativeLayout>
