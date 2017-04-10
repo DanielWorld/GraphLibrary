@@ -56,4 +56,45 @@ public class ChartDateUtilTest {
 		assertEquals(1, ChartDateUtil.getWeekOfMonth(time[1]));
 
 	}
+
+	@Test
+	public void testDayCount() {
+
+		assertEquals(
+				ChartDateUtil.getDayCount(
+				ChartDateUtil.getMillisFromDate(2017, 4, 9),
+				ChartDateUtil.getMillisFromDate(2017, 4, 10), true
+				),
+				2
+		);
+		assertEquals(
+				ChartDateUtil.getDayCount(
+				ChartDateUtil.getMillisFromDate(2017, 4, 9),
+						ChartDateUtil.getMillisFromDate(2017, 4, 10), false
+				),
+				1
+		);
+		assertEquals(
+				ChartDateUtil.getDayCount(
+				ChartDateUtil.getMillisFromDate(2016, 4, 10),
+						ChartDateUtil.getMillisFromDate(2017, 4, 10), true
+				),
+				366
+		);
+		assertNotEquals(
+				ChartDateUtil.getDayCount(
+				ChartDateUtil.getMillisFromDate(2016, 4, 10),
+						ChartDateUtil.getMillisFromDate(2017, 4, 10), true
+				),
+				364
+		);
+		assertEquals(
+				ChartDateUtil.getDayCount(
+				ChartDateUtil.getMillisFromDate(2013, 10, 11),
+						ChartDateUtil.getMillisFromDate(2017, 4, 10), true
+				),
+				1278
+		);
+
+	}
 }

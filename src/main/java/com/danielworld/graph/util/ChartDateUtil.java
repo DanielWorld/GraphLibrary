@@ -153,9 +153,7 @@ public class ChartDateUtil {
 	 * @return
 	 */
 	public static int getDayCount(long startTime, long endTime, boolean includeTarget) {
-		// TODO: this is not perfect.. sorry.
-		// TODO: Daniel (2017-02-20 18:50:04): This only works when the difference days only in 365 days..
-		return Math.abs(getDayOfYear(startTime) - getDayOfYear(endTime)) + (includeTarget ? 1 : 0);
+		return (int) (Math.abs(endTime - startTime) / (1000 * 60 * 60 * 24)) + (includeTarget ? 1 : 0);
 	}
 
 	/**
