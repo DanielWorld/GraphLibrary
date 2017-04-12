@@ -9,7 +9,9 @@ import java.util.*;
  * Created by Daniel on 2017-02-09.
  */
 
-public class ChartDateUtil {
+public final class ChartDateUtil {
+
+	private ChartDateUtil() {}
 
 	/**
 	 * Get current day of week <br>

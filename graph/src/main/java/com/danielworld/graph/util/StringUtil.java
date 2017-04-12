@@ -5,7 +5,9 @@ package com.danielworld.graph.util;
  * Created by Daniel on 2017-02-09.
  */
 
-public class StringUtil {
+public final class StringUtil {
+
+	private StringUtil() {}
 
 	/**
 	 If parameter String is null or length == 0 or length without empty space == 0 then return true
