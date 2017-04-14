@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.1'
         classpath 'com.novoda:bintray-release:0.3.4'
     }
 }
@@ -19,7 +19,7 @@ publish {
     userOrg = 'danielworld'
     groupId = 'com.danielworld'
     artifactId = 'graph-library'
-    publishVersion = '1.0.2'
+    publishVersion = '1.0.3'
     desc = 'A Graph Library for support all graphs in Android Application'
     website = 'https://github.com/DanielWorld/GraphLibrary'
     issueTracker = "${website}/issues"
@@ -34,7 +34,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.0.3"
         consumerProguardFiles 'proguard-rules.pro'
     }
 
