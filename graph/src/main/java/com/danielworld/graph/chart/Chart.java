@@ -44,6 +44,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
     protected @ColorInt int mBackgroundGradientColorStart = 0;
     protected @ColorInt int mBackgroundGradientColorEnd = 0;
     protected @ColorInt int mDottedLineColor = 0;
+    protected @ColorInt int mHighLightTextColor = 0;
     protected @ColorInt int mTodayTextColor = 0;
     private int mCircleRadius;
     private int mInnerCircleRadius;
@@ -147,6 +148,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
         mHighLightWidth = typedArray.getDimensionPixelSize(R.styleable.Chart_highLightWidth, 0);
 
         mIncludeBothSides = typedArray.getBoolean(R.styleable.Chart_includeBothSides, false);
+
+        mHighLightTextColor = typedArray.getColor(R.styleable.Chart_highLightTextColor, 0);
 
         mTodayTextColor = typedArray.getColor(R.styleable.Chart_todayTextColor, 0);
 
@@ -266,6 +269,9 @@ public abstract class Chart extends ViewGroup implements ChartData {
     private void initHighLight() {
         mHighLightBackgroundPaint.setColor(Color.parseColor("#1Affffff"));
         mHighLightBackgroundPaint.setStyle(Paint.Style.FILL);
+
+        if (mHighLightTextColor != 0)
+            mHighLightTextPaint.setColor(mHighLightTextColor);
 
         mHighLightTextPaint.setTextSize(mHighLightTextSize);
         mHighLightTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
@@ -606,7 +612,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
 
                     // 2. draw HighLight text
                     String valueY = String.valueOf((int) barDataSetList.get(barDataSetIndex).getEntries().get(i).getY());
-                    mHighLightTextPaint.setColor(barDataSetList.get(barDataSetIndex).getBarColor());
+                    if (mHighLightTextColor == 0)
+                        mHighLightTextPaint.setColor(barDataSetList.get(barDataSetIndex).getBarColor());
                     mHighLightTextPaint.getTextBounds(valueY, 0, valueY.length(), highLightTextBounds);
 
                     canvas.drawText(
