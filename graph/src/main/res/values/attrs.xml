@@ -22,5 +22,6 @@
         <attr name="highLightWidth" format="dimension"/>
         <attr name="highLightTextSize" format="dimension" />
         <attr name="includeBothSides" format="boolean"/>
+        <attr name="todayTextColor" format="color"/>
     </declare-styleable>
 </resources>

@@ -44,6 +44,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
     protected @ColorInt int mBackgroundGradientColorStart = 0;
     protected @ColorInt int mBackgroundGradientColorEnd = 0;
     protected @ColorInt int mDottedLineColor = 0;
+    protected @ColorInt int mTodayTextColor = 0;
     private int mCircleRadius;
     private int mInnerCircleRadius;
     private int mEntryLineWidth;
@@ -146,6 +147,8 @@ public abstract class Chart extends ViewGroup implements ChartData {
         mHighLightWidth = typedArray.getDimensionPixelSize(R.styleable.Chart_highLightWidth, 0);
 
         mIncludeBothSides = typedArray.getBoolean(R.styleable.Chart_includeBothSides, false);
+
+        mTodayTextColor = typedArray.getColor(R.styleable.Chart_todayTextColor, 0);
 
         setOnTouchListener(mTouchListener);
     }
@@ -482,7 +485,7 @@ public abstract class Chart extends ViewGroup implements ChartData {
             if (ChartDateUtil.getDate(System.currentTimeMillis(), "M/d")
                     .equals(mValueFormatter.getValueFormatter(barDataSet.getEntries().get(i).getX()))) {
 
-                mTextPaint.setColor(Color.BLACK);
+                mTextPaint.setColor(mTodayTextColor == 0 ? Color.BLACK : mTodayTextColor);
                 mTextPaint.getTextBounds(todayTitle, 0, todayTitle.length(), textBounds);
 
 //                Log.w(TAG, "text bounds width = " + textBounds.width());
