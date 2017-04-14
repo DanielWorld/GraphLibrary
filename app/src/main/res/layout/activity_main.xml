@@ -10,19 +10,25 @@
     <com.danielworld.graph.chart.LineChart
         android:id="@+id/GraphChart"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        app:backgroundGradientColorEnd="#435f82"
-        app:backgroundGradientColorStart="#5376a2"
-        app:circleRadius="10dp"
-        app:dottedLineColor="#537095"
-        app:entryLineWidth="3dp"
-        app:graphPaddingBottom="40dp"
-        app:graphPaddingLeft="20dp"
-        app:graphPaddingRight="20dp"
-        app:graphPaddingTop="20dp"
+        android:layout_height="210dp"
+        app:backgroundGradientColorEnd="#39c3c1"
+        app:backgroundGradientColorStart="#3db2e3"
+        app:circleRadius="9dp"
+        app:dottedLineColor="#33ffffff"
+        app:entryLineWidth="2dp"
+        app:graphLabelPaddingBottom="16dp"
+        app:graphPaddingBottom="47dp"
+        app:graphPaddingTop="27dp"
+        app:highLightBackgroundRadius="8dp"
+        app:highLightBottomPadding="10dp"
         app:highLightTextSize="9sp"
+        app:highLightTopPadding="8dp"
+        app:highLightWidth="38dp"
+        app:innerCircleRadius="0dp"
         app:labelTextSize="10sp"
-        app:highLightBackgroundRadius="8dp"/>
+        app:todayTextColor="#9100f0"
+        app:highLightTextColor="#424242"
+        />
 
     <LinearLayout
         android:id="@+id/lienarLayout"
@@ -45,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="배경색 start"
-            android:text="5376a2" />
+            android:text="ff9382" />
 
         <EditText
             android:id="@+id/gradientEnd"
@@ -59,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="점선 색"
-            android:text="537095" />
+            android:text="33ffffff" />
     </LinearLayout>
 
     <Button

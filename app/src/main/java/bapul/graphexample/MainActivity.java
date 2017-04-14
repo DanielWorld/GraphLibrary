@@ -49,21 +49,27 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 ArrayList<BarEntry> entries1 = new ArrayList<>();
-                entries1.add(new BarEntry(4, random.nextInt(max)));
-                entries1.add(new BarEntry(7, random.nextInt(max)));
-                entries1.add(new BarEntry(6, random.nextInt(max)));
+                entries1.add(new BarEntry(ChartDateUtil.getDanielDayIndex(System.currentTimeMillis()), random.nextInt(max)));
+                entries1.add(new BarEntry(ChartDateUtil.getDanielDayIndex(System.currentTimeMillis()) - 3, random.nextInt(max)));
+                entries1.add(new BarEntry(ChartDateUtil.getDanielDayIndex(System.currentTimeMillis()) - 4, random.nextInt(max)));
 
                 ArrayList<BarEntry> entries2 = new ArrayList<>();
-                entries2.add(new BarEntry(7, random.nextInt(max)));
-                entries2.add(new BarEntry(8, random.nextInt(max)));
-                entries2.add(new BarEntry(10, random.nextInt(max)));
-//                entries2.add(new BarEntry(8, random.nextInt(max)));
-                entries2.add(new BarEntry(9, random.nextInt(max)));
-//                entries2.add(new BarEntry(10, random.nextInt(max)));
+                entries2.add(new BarEntry(ChartDateUtil.getDanielDayIndex(System.currentTimeMillis()) - 1, random.nextInt(max)));
+                entries2.add(new BarEntry(ChartDateUtil.getDanielDayIndex(System.currentTimeMillis()) + 1, random.nextInt(max)));
+                entries2.add(new BarEntry(ChartDateUtil.getDanielDayIndex(System.currentTimeMillis()) + 2, random.nextInt(max)));
+                entries2.add(new BarEntry(ChartDateUtil.getDanielDayIndex(System.currentTimeMillis()) + 3, random.nextInt(max)));
 
-                BarDataSet barDataSet1 = new BarDataSet(entries1, Color.parseColor("#32a0e8"), 4, 10);
-//        BarDataSet barDataSet2 = new BarDataSet(entries2, getResources().getColor(android.R.color.holo_green_dark));
-                BarDataSet barDataSet2 = new BarDataSet(entries2, getResources().getColor(android.R.color.holo_green_dark), 4, 10);
+                BarDataSet barDataSet1 = new BarDataSet(
+                        entries1,
+                        Color.parseColor("#adfcff"),
+                        ChartDateUtil.getDanielDayIndex(System.currentTimeMillis()) - 4,
+                        ChartDateUtil.getDanielDayIndex(System.currentTimeMillis()) + 3);
+
+                BarDataSet barDataSet2 = new BarDataSet(
+                        entries2,
+                        Color.parseColor("#ceffca"),
+                        ChartDateUtil.getDanielDayIndex(System.currentTimeMillis()) - 4,
+                        ChartDateUtil.getDanielDayIndex(System.currentTimeMillis()) + 3);
 
                 BarData barData = new BarData(barDataSet1, barDataSet2);
 
