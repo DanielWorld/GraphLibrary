@@ -23,4 +23,13 @@
 -keepclasseswithmembers class com.danielworld.graph.chart.Chart {
     public *;
 }
+-keep class com.danielworld.graph.model.** {
+    *;
+}
+-keepclasseswithmembers interface com.danielworld.graph.ChartData {
+    *;
+}
+-keep class com.danielworld.graph.chart.LineChart {
+    *;
+}
 
